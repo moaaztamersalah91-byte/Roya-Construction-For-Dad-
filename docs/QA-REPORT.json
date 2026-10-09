@@ -1,0 +1,11 @@
+{
+  "html_integrity": true,
+  "duplicate_ids": [],
+  "missing_local_references": [],
+  "javascript_syntax_ok": true,
+  "javascript_syntax_error": "",
+  "file_count": 4,
+  "root": "/mnt/data/BuildCore-Audit",
+  "javascript_syntax_ok_after_fix": true,
+  "javascript_syntax_error_after_fix": ""
+}

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Roya — إدارة أعمال المقاولات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<section class="firebase-screen show" id="dashboardAuthScreen" aria-live="polite">
+  <div class="firebase-auth-card">
+    <div class="firebase-brand"></div>
+    <h1>تسجيل دخول الإدارة</h1>
+    <p>سجّل الدخول بحساب Firebase المعتمد كأدمن للوصول إلى لوحة التحكم وبيانات الشركة.</p>
+    <button class="google-login-btn" id="adminGoogleLogin"><span class="google-logo" aria-hidden="true"><svg viewBox="0 0 48 48" role="img" focusable="false"><path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11a9.4 9.4 0 0 1-4.1 6.2v5.1h6.6c3.9-3.6 6.1-8.8 6.1-15Z"/><path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.1c-1.8 1.2-4.1 2-6.9 2-5.3 0-9.8-3.6-11.4-8.4H5.8v5.3A20 20 0 0 0 24 44Z"/><path fill="#FBBC05" d="M12.6 27.6a12 12 0 0 1 0-7.2v-5.3H5.8a20 20 0 0 0 0 17.8l6.8-5.3Z"/><path fill="#EA4335" d="M24 12.1c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 6.1 29.5 4 24 4A20 20 0 0 0 5.8 15.1l6.8 5.3c1.6-4.8 6.1-8.3 11.4-8.3Z"/></svg></span> المتابعة باستخدام Google</button>
+    <div class="auth-divider">أو باستخدام البريد الإلكتروني</div>
+    <form class="firebase-login-form" id="adminEmailLogin"><input id="adminEmail" type="email" placeholder="البريد الإلكتروني" autocomplete="username" required><input id="adminPassword" type="password" placeholder="كلمة المرور" autocomplete="current-password" required><button class="primary" type="submit">تسجيل الدخول</button></form>
+    <p class="firebase-message" id="adminAuthMessage">صلاحية الأدمن تُمنح يدويًا من Firebase ولا يحصل عليها أي مستخدم بمجرد التسجيل.</p>
+    <a class="auth-secondary" href="index.html">العودة إلى موقع Roya</a>
+  </div>
+</section>
+<div class="app-shell">
+<aside class="sidebar sidebar-scroll" id="sidebar">
+  <div class="brand"></div>
+  <nav class="nav">
+    <p class="nav-label">نظرة عامة</p>
+    <button class="nav-item active" data-page="dashboard"><span>⌂</span><b>لوحة التحكم</b></button>
+    <button class="nav-item" data-page="projects"><span>▦</span><b>المشاريع</b></button>
+    <p class="nav-label">التشغيل</p>
+    <button class="nav-item" data-page="materials"><span>▤</span><b>الخامات والمشتريات</b></button>
+    <button class="nav-item" data-page="workers"><span>♙</span><b>العمالة</b></button>
+    <button class="nav-item" data-page="expenses"><span>↗</span><b>المصروفات</b></button>
+    <button class="nav-item" data-page="payments"><span>₤</span><b>دفعات العملاء</b></button>
+    <button class="nav-item" data-page="extracts"><span>▣</span><b>المستخلصات</b></button>
+    <p class="nav-label">التحليل</p>
+    <button class="nav-item" data-page="reports"><span>◒</span><b>التقارير</b></button>
+    <button class="nav-item" data-page="team"><span>♟</span><b>الفريق والشركاء</b></button>
+    <p class="nav-label">إدارة متقدمة</p>
+    <button class="nav-item" data-page="quotes"><span>◈</span><b>عروض الأسعار والعقود</b></button>
+    <button class="nav-item" data-page="workitems"><span>▥</span><b>بنود الأعمال والكميات</b></button>
+    <button class="nav-item" data-page="suppliers"><span>♜</span><b>الموردون</b></button>
+    <button class="nav-item" data-page="inventory"><span>▤</span><b>المخزون</b></button>
+    <button class="nav-item" data-page="dues"><span>₱</span><b>مستحقات العمال والمقاولين</b></button>
+    <button class="nav-item" data-page="archive"><span>▱</span><b>الأرشيف وسلة المحذوفات</b></button>
+    <button class="nav-item" data-page="activity"><span>◷</span><b>سجل النشاط والتنبيهات</b></button>
+    <button class="nav-item" data-page="messages"><span>✉</span><b>رسائل المستخدمين</b></button>
+    <button class="nav-item" data-page="settings"><span>⚙</span><b>الإعدادات</b></button>
+  </nav>
+  <div class="sidebar-bottom"><div class="status-dot"></div><div><strong>النظام جاهز</strong></div></div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="main">
+<header class="topbar">
+  <button class="icon-btn mobile-menu" id="menuBtn">☰</button>
+  <div class="page-heading"><span>مساحة العمل</span><h1 id="pageTitle">لوحة التحكم</h1></div>
+  <div class="global-search"><span>⌕</span><input id="globalSearch" autocomplete="off" placeholder="ابحث في النظام: مشروع، شركة، عميل، مصروف، مورد..."/><kbd>Ctrl K</kbd><div id="searchSuggestions" class="search-suggestions"></div></div><div class="top-actions"><button class="icon-btn" id="themeBtn">◐</button><button class="lang-btn" id="langBtn">EN</button><button class="icon-btn notification" type="button" data-page-jump="messages" title="رسائل المستخدمين">✉</button><div class="profile"><div class="avatar">ت</div><div><strong>تامر صلاح</strong><small>حساب الإدارة</small></div><span>⌄</span></div></div>
+</header>
+<section class="content">
+  <div class="page dashboard-page active-page" data-page-view="dashboard">
+    <div class="hero-row"><div><p class="eyebrow">نظرة اليوم</p><h2>مركز التحكم في أعمالك</h2><p class="muted">تابع المشاريع، الشركات، التكاليف، العمالة ودفعات العملاء من مكان واحد.</p></div><button class="primary" data-modal="project">＋ مشروع جديد</button></div>
+    <div class="stats-grid">
+      <article class="stat-card"><div class="stat-icon green">▦</div><span>المشاريع النشطة</span><strong id="statProjects">0</strong><small>قيد التنفيذ حاليًا</small></article>
+      <article class="stat-card"><div class="stat-icon dark">₤</div><span>قيمة العقود</span><strong id="statContracts">0</strong><small>جنيه مصري</small></article>
+      <article class="stat-card"><div class="stat-icon orange">↗</div><span>إجمالي التكاليف</span><strong id="statCosts">0</strong><small>مسجلة في النظام</small></article>
+      <article class="stat-card"><div class="stat-icon blue">₽</div><span>الربح التقديري</span><strong id="statProfit">0</strong><small>يظل محفوظًا حتى بعد حذف المشروع</small></article>
+    </div>
+    <div class="command-center" id="commandCenter"></div>
+    <div class="grid-2">
+      <section class="panel chart-panel"><div class="panel-head"><div><h3>حركة المصروفات</h3><span>آخر 6 أشهر</span></div><span class="live-chip">LIVE DATA</span></div><div class="chart"><div class="y-labels"><span>300K</span><span>200K</span><span>100K</span><span>0</span></div><div class="bars"><div style="height:0%"><i></i><label>مايو</label></div><div style="height:0%"><i></i><label>يونيو</label></div><div style="height:0%"><i></i><label>يوليو</label></div><div style="height:0%"><i></i><label>أغسطس</label></div><div style="height:0%"><i></i><label>سبتمبر</label></div><div style="height:0%"><i></i><label>أكتوبر</label></div></div></div></section>
+      <section class="panel"><div class="panel-head"><div><h3>أحدث المشاريع</h3><span>حسب آخر تحديث</span></div><button class="text-btn" data-page-jump="projects">عرض الكل</button></div><div class="project-list" id="recentProjects"></div></section>
+    </div>
+    <section class="panel"><div class="panel-head"><div><h3>الملخص المالي</h3><span>التكاليف والأرباح محفوظة كسجل مستقل عن حالة المشروع</span></div><button class="secondary" data-page-jump="reports">التقرير الكامل</button></div><div class="finance-grid"><div><span>العقود</span><strong id="finContracts">0 ج.م</strong></div><div><span>المحصّل</span><strong id="finReceived">0 ج.م</strong></div><div><span>التكاليف</span><strong id="finCosts">0 ج.م</strong></div><div><span>الربح التقديري</span><strong class="profit" id="finProfit">0 ج.م</strong></div></div></section>
+  </div>
+
+  <div class="page" data-page-view="projects"><div class="page-toolbar"><div><p class="eyebrow">WORKSPACE</p><h2>المشاريع</h2><p class="muted">كل مشروع مرتبط بعميله وشركته ومديره وتكاليفه وحالته التشغيلية.</p></div><button class="primary" data-modal="project">＋ مشروع جديد</button></div><div class="filter-row"><input id="projectSearch" placeholder="ابحث عن المشروع أو الشركة أو العميل..."><select id="statusFilter"><option value="all">كل الحالات</option><option>قيد التنفيذ</option><option>منتهي</option><option>على وشك البدء</option><option>على وشك الانتهاء</option></select><select id="projectSort"><option value="newest">الأحدث أولًا</option><option value="value">الأعلى قيمة</option></select></div><div class="notice"><strong>مهم:</strong> حذف المشروع يحذف بطاقة المشروع من التشغيل فقط، بينما تظل سجلات المصروفات والتكاليف والربح التقديري محفوظة في السجل المالي.</div><div class="cards-grid" id="projectCards"></div></div>
+
+  <div class="page" data-page-view="materials"><div class="page-toolbar"><div><p class="eyebrow">OPERATIONS</p><h2>الخامات والمشتريات</h2><p class="muted">تتبع المواد والكميات والأسعار وربطها بالمشروع والمسؤول عن الشراء.</p></div><button class="primary" data-modal="material">＋ إضافة مشتريات</button></div><div class="panel table-panel"><table><thead><tr><th>الخامة</th><th>المشروع</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th>المسؤول</th><th>الإجراءات</th></tr></thead><tbody id="materialsBody"></tbody></table></div></div>
+  <div class="page" data-page-view="workers"><div class="page-toolbar"><div><p class="eyebrow">LABOR</p><h2>العمالة</h2><p class="muted">طريقة الدفع مرنة: بالمتر، يومية، مقطوعية أو أي اتفاق آخر.</p></div><button class="primary" data-modal="worker">＋ إضافة عامل</button></div><div class="workers-grid" id="workersGrid"></div></div>
+  <div class="page" data-page-view="expenses"><div class="page-toolbar"><div><p class="eyebrow">FINANCE</p><h2>المصروفات</h2><p class="muted">كل مصروف له تفاصيل كاملة حتى يمكن مراجعة التكلفة لاحقًا.</p></div><button class="primary" data-modal="expense">＋ تسجيل مصروف</button></div><div class="expense-summary"><div><span>عدد السجلات</span><strong id="expenseCount">0</strong></div><div><span>إجمالي المصروفات</span><strong id="expenseTotal">0 ج.م</strong></div><div><span>أعلى بند</span><strong id="topExpense">—</strong></div></div><div class="panel table-panel"><table><thead><tr><th>التاريخ</th><th>البند</th><th>التصنيف</th><th>المشروع</th><th>المبلغ</th><th>المورد/المستفيد</th><th>طريقة الدفع</th><th>تفاصيل</th></tr></thead><tbody id="expensesBody"></tbody></table></div></div>
+  <div class="page" data-page-view="payments"><div class="page-toolbar"><div><p class="eyebrow">RECEIVABLES</p><h2>دفعات العملاء</h2><p class="muted">سجل كل دفعة واعرف المتبقي على كل مشروع.</p></div><button class="primary" data-modal="payment">＋ تسجيل دفعة</button></div><div class="panel table-panel"><table><thead><tr><th>المشروع</th><th>التاريخ</th><th>المبلغ</th><th>الطريقة</th><th>رقم المرجع</th><th>ملاحظات</th><th>الإجراءات</th></tr></thead><tbody id="paymentsBody"></tbody></table></div></div>
+  <div class="page" data-page-view="extracts"><div class="page-toolbar"><div><p class="eyebrow">DOCUMENTS</p><h2>المستخلصات</h2><p class="muted">اكتب المستخلص كمستند كامل، واحفظه واعرضه لاحقًا بنفس التنسيق الذي كتبه والدك.</p></div><button class="primary" data-modal="extract">＋ مستخلص جديد</button></div><div class="filter-row extract-filters"><input id="extractSearch" placeholder="ابحث باسم المستخلص أو المشروع أو الشركة أو العميل..."/><select id="extractStatus"><option value="all">كل الحالات</option><option>مسودة</option><option>قيد المراجعة</option><option>معتمد</option><option>مرفوض</option><option>مدفوع</option></select></div><div class="extract-grid" id="extractGrid"></div></div>
+
+  <div class="page" data-page-view="reports"><div class="page-toolbar"><div><p class="eyebrow">INSIGHTS</p><h2>التقارير</h2><p class="muted">قراءة مالية وتشغيلية أوضح لأعمالك.</p></div></div><div class="report-grid"><article class="report-card"><span>إجمالي العقود</span><strong id="repContracts">0</strong><small>قيمة كل العقود المسجلة</small></article><article class="report-card"><span>إجمالي التكاليف</span><strong id="repCosts">0</strong><small>مواد + عمالة + مصروفات</small></article><article class="report-card"><span>المحصّل</span><strong id="repReceived">0</strong><small>دفعات العملاء</small></article><article class="report-card"><span>الربح التقديري</span><strong id="repProfit">0</strong><small>العقد − التكاليف</small></article></div><section class="panel"><div class="panel-head"><div><h3>سجل الأرباح المحفوظ</h3><span>السجل لا يعتمد على وجود بطاقة المشروع الحالية</span></div></div><div class="ledger" id="ledgerBody"></div></section></div>
+  <div class="page" data-page-view="team">
+  <div class="team-hero">
+    <div>
+      <p class="eyebrow">PEOPLE</p>
+      <h2>الفريق والشركاء</h2>
+      <p class="muted">إدارة أعضاء شركة Roya وصلاحياتهم مع الحفاظ على سجلهم التاريخي.</p>
+    </div>
+    <button class="primary team-add-btn" data-modal="member">＋ إضافة شخص</button>
+  </div>
+
+  <section class="owner-hero-card">
+    <div class="owner-identity">
+      <div class="owner-avatar owner-avatar-lg">ت</div>
+      <div>
+        <span class="eyebrow">OWNER</span>
+        <h3>تامر صلاح</h3>
+        <p>المالك • صلاحيات كاملة</p>
+      </div>
+    </div>
+    <div class="owner-status">
+      <span class="status-dot-inline"></span>
+      <strong>الحساب الرئيسي</strong>
+      <small>إدارة كاملة للنظام والفريق</small>
+    </div>
+  </section>
+
+  <div class="team-section-title">
+    <div>
+      <p class="eyebrow">ACTIVE TEAM</p>
+      <h3>أعضاء الفريق</h3>
+    </div>
+    <span class="team-count-pill" id="teamActiveCount">0</span>
+  </div>
+
+  <div class="team-grid" id="teamGrid"></div>
+
+  <section class="archive-team-card">
+    <div class="archive-header">
+      <div>
+        <p class="eyebrow">ARCHIVE</p>
+        <h3>الأرشيف</h3>
+        <p class="archive-description">الأعضاء الذين تم حذفهم من الفريق النشط. سجلاتهم التاريخية تظل محفوظة.</p>
+      </div>
+      <span class="count-badge" id="teamArchiveCount">0</span>
+    </div>
+    <div class="archive-list" id="teamArchiveList"></div>
+  </section>
+
+  <section class="permission-note">
+    <div class="permission-icon">✓</div>
+    <div>
+      <strong>صلاحيات إدارة الفريق</strong>
+      <span>تامر صلاح هو المالك والمخول بإضافة وتعديل وتعطيل وحذف واستعادة أعضاء الفريق. حذف العضو ينقله إلى الأرشيف ولا يحذف تاريخه.</span>
+    </div>
+  </section>
+</div>
+<div class="page" data-page-view="quotes"><div class="page-toolbar"><div><p class="eyebrow">COMMERCIAL</p><h2>عروض الأسعار والعقود</h2><p class="muted">أنشئ عرض سعر، راجعه، ثم حوّله إلى مشروع عند اعتماد العميل.</p></div><button class="primary" data-modal="quote">＋ عرض سعر جديد</button></div><div class="feature-grid" id="quotesGrid"></div></div>
+  <div class="page" data-page-view="workitems"><div class="page-toolbar"><div><p class="eyebrow">QUANTITIES</p><h2>بنود الأعمال والكميات</h2><p class="muted">تابع الكميات المخططة والمنفذة والمتبقية وسعر الوحدة.</p></div><button class="primary" data-modal="workitem">＋ بند عمل</button></div><div class="panel table-panel"><table><thead><tr><th>البند</th><th>المشروع</th><th>الكمية</th><th>المنفذ</th><th>المتبقي</th><th>الوحدة</th><th>سعر الوحدة</th><th>الإجمالي</th><th>الإجراءات</th></tr></thead><tbody id="workitemsBody"></tbody></table></div></div>
+  <div class="page" data-page-view="suppliers"><div class="page-toolbar"><div><p class="eyebrow">SUPPLY CHAIN</p><h2>الموردون</h2><p class="muted">بيانات الموردين والمشتريات والمدفوعات والمبالغ المتبقية.</p></div><button class="primary" data-modal="supplier">＋ مورد جديد</button></div><div class="feature-grid" id="suppliersGrid"></div></div>
+  <div class="page" data-page-view="inventory"><div class="page-toolbar"><div><p class="eyebrow">STOCK</p><h2>المخزون</h2><p class="muted">راقب الكميات وحدود إعادة الطلب ومواقع التخزين.</p></div><button class="primary" data-modal="stock">＋ إضافة مخزون</button></div><div class="inventory-grid" id="inventoryGrid"></div></div>
+  <div class="page" data-page-view="dues"><div class="page-toolbar"><div><p class="eyebrow">LABOR PAYABLES</p><h2>مستحقات العمال والمقاولين</h2><p class="muted">اعرف المستحق والمدفوع والمتبقي لكل شخص.</p></div><button class="primary" data-modal="due">＋ تسجيل دفعة</button></div><div class="panel table-panel"><table><thead><tr><th>الاسم</th><th>المشروع</th><th>طريقة الحساب</th><th>المستحق</th><th>المدفوع</th><th>المتبقي</th><th>آخر دفعة</th><th>الإجراءات</th></tr></thead><tbody id="duesBody"></tbody></table></div></div>
+  <div class="page" data-page-view="archive"><div class="page-toolbar"><div><p class="eyebrow">RECOVERY</p><h2>الأرشيف وسلة المحذوفات</h2><p class="muted">المشاريع المؤرشفة والمحذوفة تظل قابلة للمراجعة، والسجل المالي لا يُفقد.</p></div></div><div class="grid-2"><section class="panel"><div class="panel-head"><div><h3>المشاريع المؤرشفة</h3><span>للمراجعة والرجوع عند الحاجة</span></div></div><div id="archiveList"></div></section><section class="panel"><div class="panel-head"><div><h3>سلة المحذوفات</h3><span>حذف تشغيلي مع الاحتفاظ بالسجل المالي</span></div></div><div id="trashList"></div></section></div></div>
+  <div class="page" data-page-view="activity"><div class="page-toolbar"><div><p class="eyebrow">CONTROL CENTER</p><h2>سجل النشاط والتنبيهات</h2><p class="muted">كل تعديل مهم وتنبيه يحتاج متابعة في مكان واحد.</p></div></div><div class="grid-2"><section class="panel"><div class="panel-head"><div><h3>آخر النشاطات</h3><span>من قام بماذا ومتى</span></div><button class="text-btn danger-text" type="button" onclick="clearActivityLog()">مسح السجل بالكامل</button></div><div id="activityList"></div></section><section class="panel"><div class="panel-head"><div><h3>التنبيهات</h3><span>مواعيد ومشاكل ومخزون</span></div></div><div id="alertsList"></div></section></div></div>
+  <div class="page" data-page-view="messages">
+    <div class="page-toolbar"><div><p class="eyebrow">CUSTOMER SUPPORT</p><h2>رسائل المستخدمين</h2><p class="muted">راجع رسائل العملاء ورد عليهم من نفس مساحة العمل.</p></div><button class="secondary" id="refreshAdminMessages" type="button">↻ تحديث الرسائل</button></div>
+    <div class="message-stats-grid"><article class="stat-card"><div class="stat-icon orange">✉</div><span>إجمالي الرسائل</span><strong id="adminMessageTotal">—</strong><small>كل رسائل المستخدمين</small></article><article class="stat-card"><div class="stat-icon blue">◷</div><span>بانتظار الرد</span><strong id="adminMessagePending">—</strong><small>رسائل لم يتم الرد عليها</small></article><article class="stat-card"><div class="stat-icon green">✓</div><span>تم الرد عليها</span><strong id="adminMessageAnswered">—</strong><small>ردود محفوظة للمستخدمين</small></article></div>
+    <div class="admin-message-layout"><section class="panel"><div class="panel-head"><div><h3>صندوق الرسائل</h3><span id="adminInboxStatus">جارٍ التحقق من صلاحية الإدارة…</span></div><div class="message-filter-wrap"><input id="adminMessageSearch" type="search" placeholder="ابحث في الرسائل…" aria-label="البحث في الرسائل"><select id="adminMessageFilter" aria-label="تصفية الرسائل"><option value="all">كل الرسائل</option><option value="pending">بانتظار الرد</option><option value="answered">تم الرد</option></select></div></div><div class="admin-message-list" id="adminMessages"><div class="empty-state">جارٍ تحميل الرسائل…</div></div></section>
+    <form class="panel admin-reply-panel" id="replyForm"><div class="panel-head"><div><h3>الرد على الرسالة</h3><span id="replyTarget">اختر رسالة من القائمة لكتابة الرد.</span></div></div><div class="reply-selected-preview" id="replyMessagePreview">سيظهر نص الرسالة المحددة هنا.</div><label for="adminReply">نص الرد</label><textarea id="adminReply" rows="7" maxlength="5000" required placeholder="اكتب ردك للمستخدم هنا…"></textarea><button class="primary" type="submit">حفظ وإرسال الرد ↗</button><p class="reply-feedback" id="adminReplyFeedback" role="status"></p></form></div>
+  </div>
+  <div class="page" data-page-view="settings"><div class="page-toolbar"><div><p class="eyebrow">SYSTEM</p><h2>الإعدادات</h2><p class="muted">إعدادات النظام الأساسية.</p></div></div><div class="settings-grid"><div class="panel setting"><div><strong>الوضع الداكن</strong><small>مظهر مناسب للعمل الطويل</small></div><button class="switch" id="themeSwitch"><i></i></button></div><div class="panel setting"><div><strong>لغة النظام</strong><small>العربية / English</small></div><button class="secondary" id="settingsLang">تغيير اللغة</button></div></div></div></div>
+</section></main></div>
+
+<div class="modal" id="modal"><div class="modal-box"><button class="modal-close" id="closeModal">×</button><div id="modalBody"></div></div></div>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+<script type="module" src="firebase.js"></script>
+</body></html>

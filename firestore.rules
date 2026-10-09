@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Admin grants are created only by a trusted administrator in Firebase Console.
+    // A user cannot grant themselves admin access through client SDK writes.
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Internal business records stay private to provisioned administrators.
+    match /royaData/{documentId} { allow read, write: if isAdmin(); }
+    match /projects/{documentId} { allow read, write: if isAdmin(); }
+    match /expenses/{documentId} { allow read, write: if isAdmin(); }
+    match /materials/{documentId} { allow read, write: if isAdmin(); }
+    match /workers/{documentId} { allow read, write: if isAdmin(); }
+    match /payments/{documentId} { allow read, write: if isAdmin(); }
+    match /ledger/{documentId} { allow read, write: if isAdmin(); }
+    match /extracts/{documentId} { allow read, write: if isAdmin(); }
+    match /team/{documentId} { allow read, write: if isAdmin(); }
+    match /teamArchive/{documentId} { allow read, write: if isAdmin(); }
+    match /quotes/{documentId} { allow read, write: if isAdmin(); }
+    match /workItems/{documentId} { allow read, write: if isAdmin(); }
+    match /suppliers/{documentId} { allow read, write: if isAdmin(); }
+    match /inventory/{documentId} { allow read, write: if isAdmin(); }
+    match /dues/{documentId} { allow read, write: if isAdmin(); }
+    match /deleted/{documentId} { allow read, write: if isAdmin(); }
+    match /activities/{documentId} { allow read, write: if isAdmin(); }
+    match /alerts/{documentId} { allow read, write: if isAdmin(); }
+
+    // The public site reads only explicitly published project cards, never internal project records.
+    match /publicProjects/{projectId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Private account profile. Role fields are deliberately not client-writable.
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','email','displayName','createdAt','updatedAt'])
+        && request.resource.data.uid == request.auth.uid;
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName','updatedAt']);
+      allow delete: if isAdmin();
+    }
+
+    // Contact form creates a private thread. Only its owner and an admin can read it;
+    // only an admin can change reply/status fields.
+    match /contactMessages/{messageId} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid','email','name','subject','message','status','adminReply','createdAt','repliedAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 100
+        && request.resource.data.subject is string && request.resource.data.subject.size() <= 150
+        && request.resource.data.email is string && request.resource.data.email.size() > 0 && request.resource.data.email.size() <= 254
+        && request.resource.data.message is string && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 5000
+        && request.resource.data.status == 'unread'
+        && request.resource.data.adminReply == '';
+      allow read: if signedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      // Replies are archived separately before the original inbox item is deleted.
+      allow update: if false;
+      allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+    }
+
+    // A replied-to conversation lives here so deleting the original inbox item does not
+    // erase the reply the user needs to read. Only its owner and admins can read/delete it.
+    match /contactReplies/{replyId} {
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['uid','email','name','subject','message','adminReply','createdAt','repliedAt'])
+        && request.resource.data.uid is string
+        && request.resource.data.adminReply is string
+        && request.resource.data.adminReply.size() > 0
+        && request.resource.data.adminReply.size() <= 5000
+        && request.resource.data.message is string
+        && request.resource.data.message.size() <= 5000;
+      allow read: if signedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow update: if false;
+      allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+    }
+
+    // Deny every collection not explicitly allowed above.
+    match /{document=**} { allow read, write: if false; }
+  }
+}
